@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './auth';
+import { PracticeProvider } from './practice';
 import { AppRoutes } from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
@@ -15,18 +16,20 @@ createRoot(root).render(
   <StrictMode>
     <ErrorBoundary>
       <AuthProvider>
-        <BrowserRouter>
-          <a className="skip" href="#content">
-            Skip to content
-          </a>
-          <div className="app-frame">
-            <Header />
-            <main id="content" className="shell page">
-              <AppRoutes />
-            </main>
-            <Footer />
-          </div>
-        </BrowserRouter>
+        <PracticeProvider>
+          <BrowserRouter>
+            <a className="skip" href="#content">
+              Skip to content
+            </a>
+            <div className="app-frame">
+              <Header />
+              <main id="content" className="shell page">
+                <AppRoutes />
+              </main>
+              <Footer />
+            </div>
+          </BrowserRouter>
+        </PracticeProvider>
       </AuthProvider>
     </ErrorBoundary>
   </StrictMode>,

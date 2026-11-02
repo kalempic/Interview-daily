@@ -33,7 +33,7 @@ export function SignInPage() {
       <ol className="steps">
         <li>Open today’s drill and read the question.</li>
         <li>Write an answer, then get covered and missing points.</li>
-        <li>Come back to the attempt later in History.</li>
+        <li>Sign in, and the next visit puts your last answer back on the drill.</li>
       </ol>
 
       {configured ? (

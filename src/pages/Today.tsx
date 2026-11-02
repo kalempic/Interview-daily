@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { saveAttempt } from '../attempts';
 import { useAuth } from '../auth';
 import { FeedbackPanel } from '../components/FeedbackPanel';
+import { PracticeRecord } from '../components/PracticeRecord';
 import { corpus } from '../content';
+import { usePractice } from '../practice';
 import { buildFeedback, selectDailyDrill, type Feedback } from '../rag';
 import { usePageTitle } from '../usePageTitle';
 
@@ -12,6 +14,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'local';
 export function TodayPage() {
   usePageTitle('Today');
   const { user, configured } = useAuth();
+  const { remember } = usePractice();
   const today = useMemo(() => selectDailyDrill(corpus.drills), []);
   const [drillId, setDrillId] = useState(today.id);
   const [answer, setAnswer] = useState('');
@@ -29,6 +32,14 @@ export function TodayPage() {
     month: 'long',
     day: 'numeric',
   });
+
+  function restoreAnswer(next: string) {
+    setAnswer(next);
+    setSubmitted('');
+    setFeedback(null);
+    setSaveState('idle');
+    setSaveError('');
+  }
 
   function resetPractice(nextId: string) {
     setDrillId(nextId);
@@ -61,6 +72,15 @@ export function TodayPage() {
         hitHeadings: next.hitHeadings,
       });
       setSaveState('saved');
+      remember({
+        uid: user.uid,
+        drillId: drill.id,
+        answer: attemptText,
+        scoreLabel: next.scoreLabel,
+        covered: next.covered,
+        missing: next.missing,
+        hitHeadings: next.hitHeadings,
+      });
     } catch {
       setSaveState('error');
       setSaveError('Could not save this attempt. Check your connection and Firestore rules, then try again.');
@@ -116,6 +136,8 @@ export function TodayPage() {
         </select>
       </label>
 
+      <PracticeRecord drillId={drill.id} onRestore={restoreAnswer} />
+
       <article className="card question-card">
         <h2>Question</h2>
         <p className="question">{drill.question}</p>
@@ -145,13 +167,12 @@ export function TodayPage() {
             Get feedback
           </button>
         </div>
-        <p className="fine">
-          {configured
-            ? user
-              ? 'A scored attempt is saved to History.'
-              : <>Sign in if you want this attempt saved to <Link to="/history">History</Link>.</>
-            : 'Feedback works on this page. Add Firebase keys when you want History.'}
-        </p>
+        {!user && configured ? (
+          <p className="fine">
+            Sign in if you want this attempt added to <Link to="/history">your record</Link>.
+          </p>
+        ) : null}
+        {!configured ? <p className="fine">Feedback works on this page. Add Firebase keys when you want a saved record.</p> : null}
       </form>
 
       {feedback ? <FeedbackPanel feedback={feedback} strongAnswer={drill.strongAnswer} /> : null}
@@ -167,7 +188,7 @@ export function TodayPage() {
       ) : null}
       {feedback && saveState === 'local' && feedback.scored && configured && !user ? (
         <p className="fine">
-          This attempt is not saved. <Link to="/signin">Sign in</Link> to keep it in History.
+          This attempt is not saved. <Link to="/signin">Sign in</Link> to keep it on your record.
         </p>
       ) : null}
       {feedback?.scored && text === submitted ? <p className="fine">Edit the answer to score it again.</p> : null}

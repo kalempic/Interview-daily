@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../auth';
+import { usePractice } from '../practice';
 
 export function Header() {
   const { user, signOutUser } = useAuth();
+  const { attempts, status } = usePractice();
   const [signOutError, setSignOutError] = useState('');
   const label = user?.displayName || user?.email || 'Account';
+  const savedLabel = attempts.length === 1 ? '1 saved' : `${attempts.length} saved`;
 
   async function onSignOut() {
     setSignOutError('');
@@ -34,6 +37,11 @@ export function Header() {
               <span className="who" title={label}>
                 {label}
               </span>
+              {status === 'ready' ? (
+                <Link className="saved-pill" to="/history">
+                  {savedLabel}
+                </Link>
+              ) : null}
               <button type="button" className="text-button" onClick={() => void onSignOut()}>
                 Sign out
               </button>

@@ -1,34 +1,13 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { loadAttempts, type SavedAttempt } from '../attempts';
 import { useAuth } from '../auth';
 import { corpus } from '../content';
+import { usePractice } from '../practice';
 import { usePageTitle } from '../usePageTitle';
 
 export function HistoryPage() {
   usePageTitle('History');
   const { user, ready, configured } = useAuth();
-  const [attempts, setAttempts] = useState<SavedAttempt[]>([]);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
-
-  useEffect(() => {
-    if (!ready || !user) return;
-    let active = true;
-    setStatus('loading');
-    loadAttempts(user.uid)
-      .then((rows) => {
-        if (!active) return;
-        setAttempts(rows);
-        setStatus('ready');
-      })
-      .catch(() => {
-        if (!active) return;
-        setStatus('error');
-      });
-    return () => {
-      active = false;
-    };
-  }, [ready, user]);
+  const { attempts, status } = usePractice();
 
   if (!ready) return <p className="status">Checking your session…</p>;
 
