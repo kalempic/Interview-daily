@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /attempts/{attemptId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && validAttempt(request.resource.data);
+
+      allow update, delete: if false;
+    }
+  }
+
+  function signedIn() {
+    return request.auth != null;
+  }
+
+  function validAttempt(data) {
+    return data.keys().hasOnly([
+        'uid',
+        'drillId',
+        'answer',
+        'scoreLabel',
+        'covered',
+        'missing',
+        'hitHeadings',
+        'createdAt'
+      ])
+      && data.uid is string
+      && data.drillId is string
+      && data.drillId.size() > 0
+      && data.drillId.size() < 120
+      && data.answer is string
+      && data.answer.size() > 0
+      && data.answer.size() <= 8000
+      && data.scoreLabel is string
+      && data.scoreLabel.size() > 0
+      && data.scoreLabel.size() < 20
+      && data.covered is list
+      && data.covered.size() <= 20
+      && data.missing is list
+      && data.missing.size() <= 20
+      && data.hitHeadings is list
+      && data.hitHeadings.size() <= 10
+      && data.createdAt == request.time;
+  }
+}

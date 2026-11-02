@@ -1,0 +1,31 @@
+{
+  "name": "interview-daily",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Daily interview practice. Answer drills, get feedback grounded in your markdown notes.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kalempic/Interview-daily.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "firebase": "^11.10.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "vitest": "^3.2.4"
+  }
+}
