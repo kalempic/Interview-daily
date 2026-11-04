@@ -459,9 +459,7 @@ textarea {
 }
 .answer-text { white-space: pre-wrap; }
 
-.signin h1 { max-width: 20ch; }
-.steps { margin: 1rem 0 1.25rem; padding-left: 1.2rem; }
-.steps li + li { margin-top: 0.35rem; }
+.signin h1 { max-width: 22rem; }
 
 .prose h2 { margin-top: 1.6rem; }
 .prose ul, .prose ol { padding-left: 1.2rem; }

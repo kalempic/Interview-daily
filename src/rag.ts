@@ -1,12 +1,3 @@
-/**
- * Local feedback pipeline.
- *
- * Notes are split on markdown headings, ranked with TF-IDF and cosine
- * similarity against the question plus the answer, then the drill rubric
- * is checked against the answer. Covered and missing points are the rubric
- * lines themselves. Citations are excerpts from the notes. No external model.
- */
-
 export type DocKind = 'drill' | 'note';
 
 export type Chunk = {
@@ -345,10 +336,10 @@ export function buildFeedback(input: {
       missing: [],
       snippets,
       hitHeadings,
-      headline: 'Write a fuller answer to get a score.',
+      headline: 'Too short to score.',
       detail: snippets.length
-        ? 'Aim for a short paragraph you could say out loud. The notes below matched this question. The rubric is not scored yet.'
-        : 'Aim for a short paragraph you could say out loud. The rubric is not scored yet.',
+        ? 'Write a few sentences. Some notes matched the question, but there is no score yet.'
+        : 'Write a few sentences. There is no score yet.',
       scored: false,
     };
   }
@@ -361,10 +352,10 @@ export function buildFeedback(input: {
       : `You covered ${coveredCount} of ${total} key points.`;
   const detail =
     score.missing.length === 0
-      ? 'Every rubric point showed up in your answer. Read the strong answer next and tighten anything that is still vague.'
+      ? 'That covers the whole rubric. The sample answer is below if you want to compare.'
       : coveredCount === 0
-        ? 'None of the rubric points showed up clearly. Use the missing points as a checklist, then read the note excerpts.'
-        : 'The missing points are the checklist for a second pass. The excerpts are copied from your notes.';
+        ? 'None of the rubric lines matched. The missing list is what to add, and the notes below are the source.'
+        : 'The missing lines are what to add next. The notes below are where those points come from.';
 
   return {
     scoreLabel: `${coveredCount}/${total}`,
@@ -380,7 +371,6 @@ export function buildFeedback(input: {
 
 function hitsNeeded(count: number): number {
   if (count <= 2) return count;
-  // Short checklist lines match on one distinctive word. Longer lines need more.
   return Math.max(1, Math.ceil(count * 0.3));
 }
 

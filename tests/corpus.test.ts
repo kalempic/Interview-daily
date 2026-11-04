@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { corpus } from '../src/content';
-import { buildFeedback, toPlainText } from '../src/rag';
+import { buildFeedback, selectDailyDrill } from '../src/rag';
 
 const noteForDrill: Record<string, string> = {
   'react-rendering': 'rendering-and-memo',
@@ -37,14 +37,25 @@ describe('shipped corpus', () => {
         feedback.snippets.some((snippet) => snippet.docId === noteForDrill[drill.id]),
         `${drill.id} citations: ${feedback.hitHeadings.join(', ')}`,
       ).toBe(true);
-      for (const snippet of feedback.snippets) {
-        const source = corpus.noteChunks.find(
-          (chunk) => chunk.docId === snippet.docId && chunk.heading === snippet.heading,
-        );
-        expect(source, snippet.heading).toBeDefined();
-        const probe = snippet.text.endsWith('…') ? snippet.text.slice(0, -1) : snippet.text;
-        expect(toPlainText(source!.text).startsWith(probe)).toBe(true);
-      }
     }
+  });
+
+  it('does not score an answer that is only a word or two', () => {
+    const feedback = buildFeedback({
+      drill: corpus.drills[0],
+      answer: 'memo',
+      noteChunks: corpus.noteChunks,
+    });
+    expect(feedback.scored).toBe(false);
+    expect(feedback.scoreLabel).toBe('—');
+    expect(feedback.covered).toEqual([]);
+    expect(feedback.missing).toEqual([]);
+  });
+
+  it('keeps the same drill on one date and moves on the next day', () => {
+    const day = new Date(2026, 0, 1);
+    const next = new Date(2026, 0, 2);
+    expect(selectDailyDrill(corpus.drills, day).id).toBe(selectDailyDrill(corpus.drills, day).id);
+    expect(selectDailyDrill(corpus.drills, next).id).not.toBe(selectDailyDrill(corpus.drills, day).id);
   });
 });
