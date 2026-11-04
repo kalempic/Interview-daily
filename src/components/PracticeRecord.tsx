@@ -29,7 +29,11 @@ export function PracticeRecord({
   }
 
   if (status === 'loading' || status === 'idle') {
-    return <p className="status">Loading your saved answers…</p>;
+    return (
+      <p className="status" role="status">
+        Loading your saved answers…
+      </p>
+    );
   }
 
   if (status === 'error') {
@@ -44,19 +48,19 @@ export function PracticeRecord({
   const latest = summary.latestForDrill;
 
   return (
-    <section className="card record" aria-label="Your record">
-      <h2>Your record</h2>
+    <section className="card record" aria-labelledby="record-heading">
+      <h2 id="record-heading">Your record</h2>
       {summary.total === 0 ? (
         <p>No saved answers on this account yet. Write a short paragraph and get feedback. That attempt stays on this drill.</p>
       ) : (
         <>
-          <p className="record-stats">
-            <span>{summary.total === 1 ? '1 saved answer' : `${summary.total} saved answers`}</span>
-            <span>{summary.drills === 1 ? '1 drill' : `${summary.drills} drills`}</span>
+          <ul className="record-stats">
+            <li>{summary.total === 1 ? '1 saved answer' : `${summary.total} saved answers`}</li>
+            <li>{summary.drills === 1 ? '1 drill' : `${summary.drills} drills`}</li>
             {summary.streak > 0 ? (
-              <span>{summary.streak === 1 ? '1-day streak' : `${summary.streak}-day streak`}</span>
+              <li>{summary.streak === 1 ? '1-day streak' : `${summary.streak}-day streak`}</li>
             ) : null}
-          </p>
+          </ul>
           {latest ? (
             <LastAnswer attempt={latest} onRestore={onRestore} />
           ) : (
@@ -76,7 +80,7 @@ function LastAnswer({ attempt, onRestore }: { attempt: SavedAttempt; onRestore: 
       <p className="fine">
         Last answer on this drill · {attempt.scoreLabel} · {formatDay(attempt.createdAt)}
       </p>
-      <p className="record-answer">{attempt.answer}</p>
+      <blockquote className="record-answer">{attempt.answer}</blockquote>
       <button type="button" className="button" onClick={() => onRestore(attempt.answer)}>
         Put this answer back in the box
       </button>

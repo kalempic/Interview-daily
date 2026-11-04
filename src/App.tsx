@@ -15,7 +15,7 @@ export function AppRoutes() {
         path="/"
         element={
           !ready ? (
-            <p className="status">Checking your session…</p>
+            <p className="status" role="status">Checking your session…</p>
           ) : user || !configured ? (
             <Navigate to="/today" replace />
           ) : (

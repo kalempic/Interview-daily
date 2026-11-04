@@ -5,7 +5,7 @@
   --surface: #fffcf7;
   --ink: #241f1b;
   --muted: #5e564c;
-  --faint: #8a8176;
+  --faint: #6a6258;
   --line: #e0d6c8;
   --accent: #1d5a4c;
   --accent-strong: #143f36;
@@ -41,6 +41,8 @@ h1, h2, h3 {
   line-height: 1.2;
 }
 
+h1, h2, #content { scroll-margin-top: 5.5rem; }
+
 h1 { font-size: clamp(1.8rem, 3vw, 2.35rem); margin: 0 0 0.8rem; }
 h2 { font-size: 1.35rem; margin: 0 0 0.55rem; }
 h3 { font-size: 1.05rem; margin: 1.15rem 0 0.4rem; font-family: var(--sans); letter-spacing: 0; font-weight: 700; }
@@ -55,6 +57,22 @@ button, input, textarea, select { font: inherit; color: inherit; }
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .skip {
@@ -119,6 +137,9 @@ button, input, textarea, select { font: inherit; color: inherit; }
 }
 
 .nav a, .account a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   text-decoration: none;
   color: var(--muted);
   font-weight: 600;
@@ -171,8 +192,10 @@ button, input, textarea, select { font: inherit; color: inherit; }
   flex-wrap: wrap;
   gap: 0.4rem;
   margin: 0.35rem 0 0.15rem;
+  padding: 0;
+  list-style: none;
 }
-.record-stats span {
+.record-stats li {
   background: var(--accent-soft);
   color: var(--accent-strong);
   border-radius: 999px;
@@ -181,6 +204,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
   font-weight: 700;
 }
 .record-answer {
+  margin: 0.35rem 0 0;
   white-space: pre-wrap;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -302,6 +326,9 @@ textarea {
 }
 
 .text-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   border: 0;
   background: transparent;
   color: var(--accent-strong);
@@ -384,8 +411,20 @@ textarea {
   border-radius: 14px;
   padding: 0.85rem 1rem;
 }
-.note-list a { text-decoration: none; display: flex; justify-content: space-between; gap: 1rem; }
-.note-title { font-weight: 700; color: var(--ink); }
+.note-list a {
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 44px;
+  align-items: center;
+}
+.note-title {
+  font-weight: 700;
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
 .note-track { color: var(--faint); font-size: 0.92rem; }
 .note-list p { color: var(--muted); margin-bottom: 0; }
 
@@ -393,11 +432,20 @@ textarea {
   cursor: pointer;
   list-style: none;
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.15rem 0.8rem;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.15rem 0.7rem;
   align-items: baseline;
 }
 .attempt summary::-webkit-details-marker { display: none; }
+.attempt-marker {
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-top: 0.35rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+.attempt[open] .attempt-marker { transform: rotate(45deg); }
 .attempt-title { font-weight: 700; }
 .attempt-score { font-family: var(--serif); font-weight: 650; }
 .attempt-when { grid-column: 1 / -1; color: var(--faint); font-size: 0.92rem; }

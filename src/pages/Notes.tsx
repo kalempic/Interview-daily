@@ -62,13 +62,19 @@ function NoteList() {
           type="search"
           value={query}
           placeholder="Try memo, focus, empty, or STAR"
+          aria-describedby="note-search-status"
           onChange={(event) => setQuery(event.target.value)}
         />
       </label>
+      <p id="note-search-status" className="fine" role="status">
+        {normalized
+          ? notes.length === 0
+            ? `No notes match “${query.trim()}”. Try a topic such as memo, focus, or STAR.`
+            : `${notes.length} matching ${notes.length === 1 ? 'note' : 'notes'}.`
+          : `${notes.length} ${notes.length === 1 ? 'note' : 'notes'}.`}
+      </p>
 
-      {notes.length === 0 ? (
-        <p>No notes match “{query.trim()}”. Try a topic such as memo, focus, or STAR.</p>
-      ) : (
+      {notes.length === 0 ? null : (
         <ul className="note-list">
           {notes.map((note) => (
             <li key={note.id}>

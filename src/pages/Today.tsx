@@ -39,6 +39,9 @@ export function TodayPage() {
     setFeedback(null);
     setSaveState('idle');
     setSaveError('');
+    requestAnimationFrame(() => {
+      document.getElementById('answer')?.focus();
+    });
   }
 
   function resetPractice(nextId: string) {
@@ -125,9 +128,9 @@ export function TodayPage() {
         )}
       </div>
 
-      <label className="picker">
+      <label className="picker" htmlFor="drill">
         <span>Drill</span>
-        <select value={drill.id} onChange={(event) => resetPractice(event.target.value)}>
+        <select id="drill" value={drill.id} onChange={(event) => resetPractice(event.target.value)}>
           {corpus.drills.map((item) => (
             <option key={item.id} value={item.id}>
               {item.id === today.id ? `Today · ${item.title}` : item.title}
@@ -158,10 +161,13 @@ export function TodayPage() {
           maxLength={8000}
           spellCheck
           placeholder="Write the answer you would say out loud."
+          aria-describedby="answer-hint"
           onChange={(event) => setAnswer(event.target.value)}
           onKeyDown={onKeyDown}
         />
-        <p className="hint">A short paragraph is enough. Press Ctrl+Enter to get feedback.</p>
+        <p id="answer-hint" className="hint">
+          A short paragraph is enough. Press Ctrl+Enter, or Cmd+Enter on a Mac, to get feedback. The button stays off until the answer changes.
+        </p>
         <div className="actions">
           <button type="submit" className="button" disabled={!canSubmit}>
             Get feedback
@@ -177,9 +183,13 @@ export function TodayPage() {
 
       {feedback ? <FeedbackPanel feedback={feedback} strongAnswer={drill.strongAnswer} /> : null}
 
-      {feedback && saveState === 'saving' ? <p className="fine">Saving to History…</p> : null}
+      {feedback && saveState === 'saving' ? (
+        <p className="fine" role="status">
+          Saving to History…
+        </p>
+      ) : null}
       {feedback && saveState === 'saved' ? (
-        <p className="fine">
+        <p className="fine" role="status">
           Saved to <Link to="/history">History</Link>.
         </p>
       ) : null}

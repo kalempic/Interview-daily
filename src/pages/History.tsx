@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth';
 import { corpus } from '../content';
 import { usePractice } from '../practice';
+import { spokenScore } from '../spoken-score';
 import { usePageTitle } from '../usePageTitle';
 
 export function HistoryPage() {
@@ -9,7 +10,7 @@ export function HistoryPage() {
   const { user, ready, configured } = useAuth();
   const { attempts, status } = usePractice();
 
-  if (!ready) return <p className="status">Checking your session…</p>;
+  if (!ready) return <p className="status" role="status">Checking your session…</p>;
 
   if (!configured) {
     return (
@@ -39,7 +40,11 @@ export function HistoryPage() {
     <div>
       <p className="kicker">Your account</p>
       <h1>History</h1>
-      {status === 'loading' || status === 'idle' ? <p className="status">Loading your attempts…</p> : null}
+      {status === 'loading' || status === 'idle' ? (
+        <p className="status" role="status">
+          Loading your attempts…
+        </p>
+      ) : null}
       {status === 'error' ? (
         <p className="banner" role="alert">
           Could not load your attempts. Check your connection, and confirm that Firestore rules are deployed for this project.
@@ -58,15 +63,19 @@ export function HistoryPage() {
               <li key={attempt.id}>
                 <details className="attempt">
                   <summary>
+                    <span className="attempt-marker" aria-hidden="true" />
                     <span className="attempt-title">{drill?.title ?? attempt.drillId}</span>
-                    <span className="attempt-score">{attempt.scoreLabel}</span>
+                    <span className="attempt-score">
+                      <span className="sr-only">{spokenScore(attempt.scoreLabel)}</span>
+                      <span aria-hidden="true">{attempt.scoreLabel}</span>
+                    </span>
                     <span className="attempt-when">{formatWhen(attempt.createdAt)}</span>
                   </summary>
-                  <h2 className="fine-heading">Your answer</h2>
+                  <h3 className="fine-heading">Your answer</h3>
                   <p className="answer-text">{attempt.answer}</p>
                   {attempt.covered.length > 0 ? (
                     <>
-                      <h2 className="fine-heading">Covered</h2>
+                      <h3 className="fine-heading">Covered</h3>
                       <ul className="points points-covered">
                         {attempt.covered.map((point) => (
                           <li key={point}>{point}</li>
@@ -76,7 +85,7 @@ export function HistoryPage() {
                   ) : null}
                   {attempt.missing.length > 0 ? (
                     <>
-                      <h2 className="fine-heading">Missing</h2>
+                      <h3 className="fine-heading">Missing</h3>
                       <ul className="points points-missing">
                         {attempt.missing.map((point) => (
                           <li key={point}>{point}</li>
@@ -86,7 +95,7 @@ export function HistoryPage() {
                   ) : null}
                   {attempt.hitHeadings.length > 0 ? (
                     <>
-                      <h2 className="fine-heading">Notes cited</h2>
+                      <h3 className="fine-heading">Notes cited</h3>
                       <ul>
                         {attempt.hitHeadings.map((heading) => (
                           <li key={heading}>{heading}</li>

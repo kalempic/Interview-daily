@@ -37,9 +37,16 @@ export function SignInPage() {
       </ol>
 
       {configured ? (
-        <button type="button" className="button" onClick={() => void onSignIn()} disabled={pending}>
-          {pending ? 'Waiting for Google…' : 'Continue with Google'}
-        </button>
+        <>
+          <button type="button" className="button" onClick={() => void onSignIn()} disabled={pending} aria-busy={pending}>
+            Continue with Google
+          </button>
+          {pending ? (
+            <p className="status" role="status">
+              Waiting for Google…
+            </p>
+          ) : null}
+        </>
       ) : (
         <div className="banner quiet">
           <p>

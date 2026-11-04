@@ -1,17 +1,26 @@
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { Feedback } from '../rag';
+import { spokenScore } from '../spoken-score';
 import { MarkdownView } from './MarkdownView';
 
 export function FeedbackPanel({ feedback, strongAnswer }: { feedback: Feedback; strongAnswer: string }) {
   const band = !feedback.scored ? 'none' : feedback.missing.length === 0 ? 'good' : feedback.covered.length === 0 ? 'low' : 'mid';
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [feedback]);
 
   return (
-    <section className="feedback" aria-live="polite" aria-label="Feedback">
+    <section className="feedback" aria-labelledby="feedback-heading">
       <p className={`score score-${band}`}>
-        <strong>{feedback.scoreLabel}</strong>
+        <strong aria-label={spokenScore(feedback.scoreLabel)}>{feedback.scoreLabel}</strong>
         {feedback.scored ? <span> key points</span> : null}
       </p>
-      <h2>{feedback.headline}</h2>
+      <h2 id="feedback-heading" ref={headingRef} tabIndex={-1}>
+        {feedback.headline}
+      </h2>
       <p className="lede">{feedback.detail}</p>
 
       {feedback.scored ? (

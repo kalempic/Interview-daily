@@ -38,7 +38,7 @@ export function Header() {
                 {label}
               </span>
               {status === 'ready' ? (
-                <Link className="saved-pill" to="/history">
+                <Link className="saved-pill" to="/history" aria-label={`${savedLabel} answers, open History`}>
                   {savedLabel}
                 </Link>
               ) : null}
