@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { MarkdownView } from '../components/MarkdownView';
+import { Field, Fine, Kicker, Lede, Screen } from '../components/ui';
 import { corpus } from '../content';
 import { usePageTitle } from '../usePageTitle';
 
@@ -11,24 +12,24 @@ export function NotesPage() {
 
   if (id && !note) {
     return (
-      <div>
+      <Screen>
         <h1>Note not found</h1>
         <p>This note is not in the corpus.</p>
         <p>
           <Link to="/notes">Back to notes</Link>
         </p>
-      </div>
+      </Screen>
     );
   }
 
   if (note) {
     return (
       <article>
-        <p className="kicker">
+        <Kicker>
           <Link to="/notes">Notes</Link>
           <span aria-hidden="true"> · </span>
           {note.track}
-        </p>
+        </Kicker>
         <h1>{note.title}</h1>
         <MarkdownView markdown={note.body} />
       </article>
@@ -51,12 +52,11 @@ function NoteList() {
   }, [normalized]);
 
   return (
-    <div>
-      <p className="kicker">Study notes</p>
+    <Screen>
+      <Kicker>Study notes</Kicker>
       <h1>Notes</h1>
-      <p className="lede">These notes are the source of the passages you see after Get feedback.</p>
-      <label className="picker" htmlFor="note-search">
-        <span>Search</span>
+      <Lede>These notes are the source of the passages you see after Get feedback.</Lede>
+      <Field label="Search" htmlFor="note-search">
         <input
           id="note-search"
           type="search"
@@ -65,14 +65,14 @@ function NoteList() {
           aria-describedby="note-search-status"
           onChange={(event) => setQuery(event.target.value)}
         />
-      </label>
-      <p id="note-search-status" className="fine" role="status">
+      </Field>
+      <Fine id="note-search-status" role="status">
         {normalized
           ? notes.length === 0
             ? `No notes match “${query.trim()}”. Try a topic such as memo, focus, or STAR.`
             : `${notes.length} matching ${notes.length === 1 ? 'note' : 'notes'}.`
           : `${notes.length} ${notes.length === 1 ? 'note' : 'notes'}.`}
-      </p>
+      </Fine>
 
       {notes.length === 0 ? null : (
         <ul className="note-list">
@@ -87,7 +87,7 @@ function NoteList() {
           ))}
         </ul>
       )}
-    </div>
+    </Screen>
   );
 }
 

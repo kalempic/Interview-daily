@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../auth';
 import { usePractice } from '../practice';
+import { Account, Banner, HeaderBar, TextButton } from './ui';
 
 export function Header() {
   const { user, signOutUser } = useAuth();
@@ -21,7 +22,7 @@ export function Header() {
 
   return (
     <header className="site-header">
-      <div className="shell header-inner">
+      <HeaderBar>
         <Link to="/today" className="wordmark">
           <Mark />
           InterviewDaily
@@ -31,7 +32,7 @@ export function Header() {
           <NavLink to="/notes">Notes</NavLink>
           <NavLink to="/history">History</NavLink>
         </nav>
-        <div className="account">
+        <Account>
           {user ? (
             <>
               <span className="who" title={label}>
@@ -42,20 +43,14 @@ export function Header() {
                   {savedLabel}
                 </Link>
               ) : null}
-              <button type="button" className="text-button" onClick={() => void onSignOut()}>
-                Sign out
-              </button>
+              <TextButton onClick={() => void onSignOut()}>Sign out</TextButton>
             </>
           ) : (
             <NavLink to="/signin">Sign in</NavLink>
           )}
-        </div>
-      </div>
-      {signOutError ? (
-        <p className="shell banner" role="alert">
-          {signOutError}
-        </p>
-      ) : null}
+        </Account>
+      </HeaderBar>
+      {signOutError ? <Banner className="shell">{signOutError}</Banner> : null}
     </header>
   );
 }

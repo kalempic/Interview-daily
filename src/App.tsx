@@ -4,6 +4,7 @@ import { HistoryPage } from './pages/History';
 import { NotFoundPage } from './pages/NotFound';
 import { NotesPage } from './pages/Notes';
 import { SignInPage } from './pages/SignIn';
+import { Status } from './components/ui';
 import { TodayPage } from './pages/Today';
 
 export function AppRoutes() {
@@ -15,7 +16,7 @@ export function AppRoutes() {
         path="/"
         element={
           !ready ? (
-            <p className="status" role="status">Checking your session…</p>
+            <Status>Checking your session…</Status>
           ) : user || !configured ? (
             <Navigate to="/today" replace />
           ) : (

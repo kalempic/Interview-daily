@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Prose } from './ui';
 
 type Block =
   | { type: 'h'; level: number; text: string }
@@ -10,9 +11,7 @@ type Block =
 export function MarkdownView({ markdown }: { markdown: string }) {
   const blocks = parseBlocks(markdown);
   return (
-    <div className="prose">
-      {blocks.map((block, index) => renderBlock(block, index))}
-    </div>
+    <Prose>{blocks.map((block, index) => renderBlock(block, index))}</Prose>
   );
 }
 

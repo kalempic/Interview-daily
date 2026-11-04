@@ -4,6 +4,7 @@ import { saveAttempt } from '../attempts';
 import { useAuth } from '../auth';
 import { FeedbackPanel } from '../components/FeedbackPanel';
 import { PracticeRecord } from '../components/PracticeRecord';
+import { Actions, Banner, Button, Card, Field, Fine, Hint, Kicker, Screen, TextButton, TitleRow } from '../components/ui';
 import { corpus } from '../content';
 import { usePractice } from '../practice';
 import { buildFeedback, selectDailyDrill, type Feedback } from '../rag';
@@ -111,25 +112,20 @@ export function TodayPage() {
   }
 
   return (
-    <div>
-      <p className="kicker">
+    <Screen>
+      <Kicker>
         {isToday ? dateLabel : 'Practice set'}
         <span aria-hidden="true"> · </span>
         {drill.track}
         <span aria-hidden="true"> · </span>
         {drill.minutes} min
-      </p>
-      <div className="title-row">
+      </Kicker>
+      <TitleRow>
         <h1>{drill.title}</h1>
-        {isToday ? null : (
-          <button type="button" className="text-button" onClick={() => resetPractice(today.id)}>
-            Back to today
-          </button>
-        )}
-      </div>
+        {isToday ? null : <TextButton onClick={() => resetPractice(today.id)}>Back to today</TextButton>}
+      </TitleRow>
 
-      <label className="picker" htmlFor="drill">
-        <span>Drill</span>
+      <Field label="Drill" htmlFor="drill">
         <select id="drill" value={drill.id} onChange={(event) => resetPractice(event.target.value)}>
           {corpus.drills.map((item) => (
             <option key={item.id} value={item.id}>
@@ -137,11 +133,11 @@ export function TodayPage() {
             </option>
           ))}
         </select>
-      </label>
+      </Field>
 
       <PracticeRecord drillId={drill.id} onRestore={restoreAnswer} />
 
-      <article className="card question-card">
+      <Card as="article" className="question-card">
         <h2>Question</h2>
         <p className="question">{drill.question}</p>
         <h3>What interviewers check</h3>
@@ -150,7 +146,7 @@ export function TodayPage() {
             <li key={check}>{check}</li>
           ))}
         </ul>
-      </article>
+      </Card>
 
       <form className="answer-form" onSubmit={onSubmit}>
         <label htmlFor="answer">Your answer</label>
@@ -165,54 +161,46 @@ export function TodayPage() {
           onChange={(event) => setAnswer(event.target.value)}
           onKeyDown={onKeyDown}
         />
-        <p id="answer-hint" className="hint">
+        <Hint id="answer-hint">
           A short paragraph is enough. Press Ctrl+Enter, or Cmd+Enter on a Mac, to get feedback. The button stays off until the answer changes.
-        </p>
-        <div className="actions">
-          <button type="submit" className="button" disabled={!canSubmit}>
+        </Hint>
+        <Actions>
+          <Button type="submit" disabled={!canSubmit}>
             Get feedback
-          </button>
-        </div>
+          </Button>
+        </Actions>
         {!user && configured ? (
-          <p className="fine">
+          <Fine>
             Sign in if you want this attempt added to <Link to="/history">your record</Link>.
-          </p>
+          </Fine>
         ) : null}
-        {!configured ? <p className="fine">Feedback works on this page. Add Firebase keys when you want a saved record.</p> : null}
+        {!configured ? <Fine>Feedback works on this page. Add Firebase keys when you want a saved record.</Fine> : null}
       </form>
 
       {feedback ? <FeedbackPanel feedback={feedback} strongAnswer={drill.strongAnswer} /> : null}
 
-      {feedback && saveState === 'saving' ? (
-        <p className="fine" role="status">
-          Saving to History…
-        </p>
-      ) : null}
+      {feedback && saveState === 'saving' ? <Fine role="status">Saving to History…</Fine> : null}
       {feedback && saveState === 'saved' ? (
-        <p className="fine" role="status">
+        <Fine role="status">
           Saved to <Link to="/history">History</Link>.
-        </p>
+        </Fine>
       ) : null}
       {feedback && saveState === 'local' && feedback.scored && !configured ? (
-        <p className="fine">This attempt stays on this page until Firebase is configured.</p>
+        <Fine>This attempt stays on this page until Firebase is configured.</Fine>
       ) : null}
       {feedback && saveState === 'local' && feedback.scored && configured && !user ? (
-        <p className="fine">
+        <Fine>
           This attempt is not saved. <Link to="/signin">Sign in</Link> to keep it on your record.
-        </p>
+        </Fine>
       ) : null}
-      {feedback?.scored && text === submitted ? <p className="fine">Edit the answer to score it again.</p> : null}
-      {feedback && saveState === 'local' && !feedback.scored ? (
-        <p className="fine">Write a fuller answer to save this attempt.</p>
-      ) : null}
+      {feedback?.scored && text === submitted ? <Fine>Edit the answer to score it again.</Fine> : null}
+      {feedback && saveState === 'local' && !feedback.scored ? <Fine>Write a fuller answer to save this attempt.</Fine> : null}
       {saveState === 'error' ? (
-        <div className="banner" role="alert">
+        <Banner>
           <p>{saveError}</p>
-          <button type="button" className="text-button" onClick={() => feedback && void persist(feedback, submitted)}>
-            Try saving again
-          </button>
-        </div>
+          <TextButton onClick={() => feedback && void persist(feedback, submitted)}>Try saving again</TextButton>
+        </Banner>
       ) : null}
-    </div>
+    </Screen>
   );
 }

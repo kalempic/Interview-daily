@@ -3,6 +3,7 @@ import { useAuth } from '../auth';
 import { corpus } from '../content';
 import { usePractice } from '../practice';
 import { spokenScore } from '../spoken-score';
+import { Banner, ButtonLink, Kicker, PointList, Screen, Status } from '../components/ui';
 import { usePageTitle } from '../usePageTitle';
 
 export function HistoryPage() {
@@ -10,45 +11,39 @@ export function HistoryPage() {
   const { user, ready, configured } = useAuth();
   const { attempts, status } = usePractice();
 
-  if (!ready) return <p className="status" role="status">Checking your session…</p>;
+  if (!ready) return <Status>Checking your session…</Status>;
 
   if (!configured) {
     return (
-      <div>
+      <Screen>
         <h1>History</h1>
         <p>Past attempts live in Firestore. Add your Firebase keys to <code>.env</code> and sign in to start a history.</p>
         <p>
           <Link to="/signin">How to sign in</Link>
         </p>
-      </div>
+      </Screen>
     );
   }
 
   if (!user) {
     return (
-      <div>
+      <Screen>
         <h1>History</h1>
         <p>Sign in to see attempts you have saved from this account.</p>
-        <Link className="button" to="/signin">
-          Sign in
-        </Link>
-      </div>
+        <ButtonLink to="/signin">Sign in</ButtonLink>
+      </Screen>
     );
   }
 
   return (
-    <div>
-      <p className="kicker">Your account</p>
+    <Screen>
+      <Kicker>Your account</Kicker>
       <h1>History</h1>
-      {status === 'loading' || status === 'idle' ? (
-        <p className="status" role="status">
-          Loading your attempts…
-        </p>
-      ) : null}
+      {status === 'loading' || status === 'idle' ? <Status>Loading your attempts…</Status> : null}
       {status === 'error' ? (
-        <p className="banner" role="alert">
+        <Banner>
           Could not load your attempts. Check your connection, and confirm that Firestore rules are deployed for this project.
-        </p>
+        </Banner>
       ) : null}
       {status === 'ready' && attempts.length === 0 ? (
         <p>
@@ -76,21 +71,13 @@ export function HistoryPage() {
                   {attempt.covered.length > 0 ? (
                     <>
                       <h3 className="fine-heading">Covered</h3>
-                      <ul className="points points-covered">
-                        {attempt.covered.map((point) => (
-                          <li key={point}>{point}</li>
-                        ))}
-                      </ul>
+                      <PointList tone="covered" points={attempt.covered} />
                     </>
                   ) : null}
                   {attempt.missing.length > 0 ? (
                     <>
                       <h3 className="fine-heading">Missing</h3>
-                      <ul className="points points-missing">
-                        {attempt.missing.map((point) => (
-                          <li key={point}>{point}</li>
-                        ))}
-                      </ul>
+                      <PointList tone="missing" points={attempt.missing} />
                     </>
                   ) : null}
                   {attempt.hitHeadings.length > 0 ? (
@@ -109,7 +96,7 @@ export function HistoryPage() {
           })}
         </ol>
       ) : null}
-    </div>
+    </Screen>
   );
 }
 

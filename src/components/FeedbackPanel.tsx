@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Feedback } from '../rag';
 import { spokenScore } from '../spoken-score';
 import { MarkdownView } from './MarkdownView';
+import { Fine, Lede, PointList, Split } from './ui';
 
 export function FeedbackPanel({ feedback, strongAnswer }: { feedback: Feedback; strongAnswer: string }) {
   const band = !feedback.scored ? 'none' : feedback.missing.length === 0 ? 'good' : feedback.covered.length === 0 ? 'low' : 'mid';
@@ -21,35 +22,27 @@ export function FeedbackPanel({ feedback, strongAnswer }: { feedback: Feedback; 
       <h2 id="feedback-heading" ref={headingRef} tabIndex={-1}>
         {feedback.headline}
       </h2>
-      <p className="lede">{feedback.detail}</p>
+      <Lede>{feedback.detail}</Lede>
 
       {feedback.scored ? (
-        <div className="split">
-          <div>
+        <Split>
+          <section>
             <h3>Covered</h3>
             {feedback.covered.length > 0 ? (
-              <ul className="points points-covered">
-                {feedback.covered.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
+              <PointList tone="covered" points={feedback.covered} />
             ) : (
               <p>No rubric point matched.</p>
             )}
-          </div>
-          <div>
+          </section>
+          <section>
             <h3>Missing</h3>
             {feedback.missing.length > 0 ? (
-              <ul className="points points-missing">
-                {feedback.missing.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
+              <PointList tone="missing" points={feedback.missing} />
             ) : (
               <p>Nothing from the rubric is missing.</p>
             )}
-          </div>
-        </div>
+          </section>
+        </Split>
       ) : null}
 
       <h3>From your notes</h3>
@@ -74,7 +67,7 @@ export function FeedbackPanel({ feedback, strongAnswer }: { feedback: Feedback; 
       {feedback.scored ? (
         <details className="strong">
           <summary>Read a strong answer</summary>
-          <p className="fine">This is the reference answer stored on the drill. It is not a quote from your notes.</p>
+          <Fine>This is the reference answer stored on the drill. It is not a quote from your notes.</Fine>
           <MarkdownView markdown={strongAnswer} />
         </details>
       ) : null}

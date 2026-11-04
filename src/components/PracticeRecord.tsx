@@ -3,6 +3,7 @@ import type { SavedAttempt } from '../attempts';
 import { useAuth } from '../auth';
 import { summarizePractice } from '../practice-summary';
 import { usePractice } from '../practice';
+import { Banner, Button, ButtonLink, Card, Fine, Status } from './ui';
 
 export function PracticeRecord({
   drillId,
@@ -18,29 +19,25 @@ export function PracticeRecord({
 
   if (!user) {
     return (
-      <section className="card record">
+      <Card className="record">
         <h2>Your record</h2>
         <p>Sign in and this drill keeps your last answer. The next time you open it, the score and the words you wrote are already here.</p>
-        <Link className="button" to="/signin">
-          Sign in to keep answers
-        </Link>
-      </section>
+        <ButtonLink to="/signin">Sign in to keep answers</ButtonLink>
+      </Card>
     );
   }
 
   if (status === 'loading' || status === 'idle') {
     return (
-      <p className="status" role="status">
-        Loading your saved answers…
-      </p>
+      <Status>Loading your saved answers…</Status>
     );
   }
 
   if (status === 'error') {
     return (
-      <p className="banner" role="alert">
+      <Banner>
         Could not load your saved answers. Check your connection, and confirm that Firestore rules are deployed for this project.
-      </p>
+      </Banner>
     );
   }
 
@@ -48,7 +45,7 @@ export function PracticeRecord({
   const latest = summary.latestForDrill;
 
   return (
-    <section className="card record" aria-labelledby="record-heading">
+    <Card className="record" aria-labelledby="record-heading">
       <h2 id="record-heading">Your record</h2>
       {summary.total === 0 ? (
         <p>No saved answers on this account yet. Write a short paragraph and get feedback. That attempt stays on this drill.</p>
@@ -70,21 +67,19 @@ export function PracticeRecord({
           )}
         </>
       )}
-    </section>
+    </Card>
   );
 }
 
 function LastAnswer({ attempt, onRestore }: { attempt: SavedAttempt; onRestore: (answer: string) => void }) {
   return (
-    <div>
-      <p className="fine">
+    <section>
+      <Fine>
         Last answer on this drill · {attempt.scoreLabel} · {formatDay(attempt.createdAt)}
-      </p>
+      </Fine>
       <blockquote className="record-answer">{attempt.answer}</blockquote>
-      <button type="button" className="button" onClick={() => onRestore(attempt.answer)}>
-        Put this answer back in the box
-      </button>
-    </div>
+      <Button onClick={() => onRestore(attempt.answer)}>Put this answer back in the box</Button>
+    </section>
   );
 }
 

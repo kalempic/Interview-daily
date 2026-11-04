@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../auth';
+import { Banner, Button, Fine, Kicker, Lede, Screen, Status } from '../components/ui';
 import { usePageTitle } from '../usePageTitle';
 
 export function SignInPage() {
@@ -24,12 +25,12 @@ export function SignInPage() {
   }
 
   return (
-    <div className="signin">
-      <p className="kicker">Interview practice</p>
+    <Screen className="signin">
+      <Kicker>Interview practice</Kicker>
       <h1>One question a day. Feedback from your own notes.</h1>
-      <p className="lede">
+      <Lede>
         Write the answer you would say out loud. InterviewDaily checks it against the drill rubric and shows short passages from your study notes.
-      </p>
+      </Lede>
       <ol className="steps">
         <li>Open today’s drill and read the question.</li>
         <li>Write an answer, then get covered and missing points.</li>
@@ -38,34 +39,28 @@ export function SignInPage() {
 
       {configured ? (
         <>
-          <button type="button" className="button" onClick={() => void onSignIn()} disabled={pending} aria-busy={pending}>
+          <Button onClick={() => void onSignIn()} disabled={pending} aria-busy={pending}>
             Continue with Google
-          </button>
-          {pending ? (
-            <p className="status" role="status">
-              Waiting for Google…
-            </p>
-          ) : null}
+          </Button>
+          {pending ? <Status>Waiting for Google…</Status> : null}
         </>
       ) : (
-        <div className="banner quiet">
+        <Banner quiet>
           <p>
             Google sign-in needs a Firebase project. Copy <code>.env.example</code> to <code>.env</code>, add your web app keys, and restart the dev server.
           </p>
-        </div>
+        </Banner>
       )}
 
       {error ? (
-        <p className="banner" role="alert">
-          {error}
-        </p>
+        <Banner>{error}</Banner>
       ) : null}
 
-      <p className="fine">
+      <Fine>
         <Link to="/today">Practice without an account</Link>
         <span>. Feedback still works. Attempts are saved only after you sign in.</span>
-      </p>
-    </div>
+      </Fine>
+    </Screen>
   );
 }
 

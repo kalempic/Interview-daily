@@ -7,6 +7,7 @@ import { AppRoutes } from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
+import { AppFrame } from './components/ui';
 import { RouteFocus } from './RouteFocus';
 import './index.css';
 
@@ -23,13 +24,13 @@ createRoot(root).render(
             <a className="skip" href="#content">
               Skip to content
             </a>
-            <div className="app-frame">
+            <AppFrame>
               <Header />
               <main id="content" className="shell page" tabIndex={-1}>
                 <AppRoutes />
               </main>
               <Footer />
-            </div>
+            </AppFrame>
           </BrowserRouter>
         </PracticeProvider>
       </AuthProvider>
