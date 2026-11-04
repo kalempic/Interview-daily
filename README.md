@@ -2,11 +2,9 @@
 
 Daily interview practice. Answer drills, get feedback grounded in your markdown notes. React, TypeScript, Vite, Firebase, Vitest.
 
-InterviewDaily is a focused practice tool for interview prep. Each day you get one question, you write the answer you would say out loud, and the app scores that answer against a rubric. The score is a simple count of key points. Supporting passages are copied from study notes in this repo. It is not a chatbot, and it does not call an external language model.
+InterviewDaily is a focused practice tool for interview prep. Each day you get one question, you write the answer you would say out loud and the app scores that answer against a rubric. The score is a simple count of key points. Supporting passages are copied from study notes in this repo. It is not a chatbot, and it does not call an external language model.
 
-Suggested GitHub description:
-
-> Daily interview practice. Answer drills, get feedback grounded in your markdown notes. React, TypeScript, Vite, Firebase, Vitest.
+This is still work in progress. It would be more complex in time.
 
 ## Features
 
@@ -258,4 +256,12 @@ Possible later, without changing the product into a chat app:
 
 ## License
 
-Private portfolio project. Add a license before you accept outside contributions.
+Private portfolio project.
+
+## Video
+
+https://github.com/user-attachments/assets/f67c443a-a049-4871-b1a9-b9b70eb596cd
+
+
+
+
