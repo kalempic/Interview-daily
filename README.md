@@ -225,7 +225,7 @@ Not in this version:
 - A backend. I want one for accounts and attempts. It is not built yet.
 - No vector database, no embeddings API, no model key required
 - No voice interview, no badges, no leaderboard. The streak is just days you saved an answer.
-- No company-specific packs, and no page that explains the retrieval
+- No company-specific packs and no page that explains the retrieval
 
 When I get to it, still not a chat app:
 
@@ -234,6 +234,7 @@ When I get to it, still not a chat app:
 - Edit or delete an attempt. The rules currently refuse both.
 - A reminder email
 - Richer markdown, if the notes outgrow headings, lists, and inline code
+- A mobile app, but that is the separate thing
 
 ## Troubleshooting
 
